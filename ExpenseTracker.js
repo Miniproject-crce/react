@@ -1,13 +1,21 @@
-import React, { useState } from 'react';
-
+import React, { useState } from "react";
+import "./App";
 const ExpenseTracker = () => {
   const [expenses, setExpenses] = useState([]);
-  const [category, setCategory] = useState('');
-  const [amount, setAmount] = useState('');
-  const [date, setDate] = useState('');
-  const [budget, setBudget] = useState('');
+  const [category, setCategory] = useState("");
+  const [amount, setAmount] = useState("");
+  const [date, setDate] = useState("");
+  const [budget, setBudget] = useState("");
   const [editingIndex, setEditingIndex] = useState(null);
-  const [filterCategory, setFilterCategory] = useState('All');
+  const [filterCategory, setFilterCategory] = useState("All");
+
+  const categories = [
+    "Food",
+    "Transportation",
+    "Entertainment",
+    "Utilities",
+    "Other",
+  ];
 
   const handleAddExpense = () => {
     if (!category || !amount || !date) return;
@@ -27,9 +35,9 @@ const ExpenseTracker = () => {
       setExpenses([...expenses, newExpense]);
     }
 
-    setCategory('');
-    setAmount('');
-    setDate('');
+    setCategory("");
+    setAmount("");
+    setDate("");
   };
 
   const handleSetBudget = () => {
@@ -50,12 +58,16 @@ const ExpenseTracker = () => {
     setExpenses(updatedExpenses);
   };
 
-  const totalExpenses = expenses.reduce((total, expense) => total + expense.amount, 0);
+  const totalExpenses = expenses.reduce(
+    (total, expense) => total + expense.amount,
+    0,
+  );
   const remainingBudget = budget ? budget - totalExpenses : null;
 
-  const filteredExpenses = filterCategory === 'All' 
-    ? expenses 
-    : expenses.filter(expense => expense.category === filterCategory);
+  const filteredExpenses =
+    filterCategory === "All"
+      ? expenses
+      : expenses.filter((expense) => expense.category === filterCategory);
 
   return (
     <div className="container mt-5">
@@ -65,13 +77,18 @@ const ExpenseTracker = () => {
         <h2>Add/Edit Expense</h2>
         <div className="form-row">
           <div className="col">
-            <input
-              type="text"
+            <select
               className="form-control"
-              placeholder="Category"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-            />
+            >
+              <option value="">Select Category</option>
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="col">
             <input
@@ -92,7 +109,7 @@ const ExpenseTracker = () => {
           </div>
           <div className="col">
             <button className="btn btn-primary" onClick={handleAddExpense}>
-              {editingIndex !== null ? 'Update Expense' : 'Add Expense'}
+              {editingIndex !== null ? "Update Expense" : "Add Expense"}
             </button>
           </div>
         </div>
@@ -111,7 +128,9 @@ const ExpenseTracker = () => {
             />
           </div>
           <div className="col">
-            <button className="btn btn-success" onClick={handleSetBudget}>Set Budget</button>
+            <button className="btn btn-success" onClick={handleSetBudget}>
+              Set Budget
+            </button>
           </div>
         </div>
       </div>
@@ -124,36 +143,46 @@ const ExpenseTracker = () => {
           onChange={(e) => setFilterCategory(e.target.value)}
         >
           <option value="All">All</option>
-          <option value="Food">Food</option>
-          <option value="Transportation">Transportation</option>
-          <option value="Entertainment">Entertainment</option>
-          {/* Add more categories as needed */}
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
         </select>
       </div>
 
-      <div>
-        <h2>Expenses</h2>
-        <ul className="list-group">
-          {filteredExpenses.map((expense, index) => (
-            <li key={index} className="list-group-item">
-              <div>
-                <strong>Category:</strong> {expense.category} <br />
-                <strong>Amount:</strong> ${expense.amount.toFixed(2)} <br />
-                <strong>Date:</strong> {expense.date}
-              </div>
-              <button className="btn btn-warning btn-sm" onClick={() => handleEditExpense(index)}>Edit</button>
-              <button className="btn btn-danger btn-sm" onClick={() => handleDeleteExpense(index)}>Delete</button>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <h2>Expense List</h2>
+      <ul className="list-group">
+        {filteredExpenses.map((expense, index) => (
+          <li
+            key={index}
+            className="list-group-item d-flex justify-content-between align-items-center"
+          >
+            <div>
+              <strong>{expense.category}</strong> - ${expense.amount} on{" "}
+              {expense.date}
+            </div>
+            <div>
+              <button
+                className="btn btn-warning btn-sm"
+                onClick={() => handleEditExpense(index)}
+              >
+                Edit
+              </button>
+              <button
+                className="btn btn-danger btn-sm"
+                onClick={() => handleDeleteExpense(index)}
+              >
+                Delete
+              </button>
+            </div>
+          </li>
+        ))}
+      </ul>
 
       {remainingBudget !== null && (
         <div className="mt-4">
-          <h3>
-            Total Expenses: ${totalExpenses.toFixed(2)} <br />
-            Remaining Budget: ${remainingBudget.toFixed(2)}
-          </h3>
+          <h4>Remaining Budget: ${remainingBudget.toFixed(2)}</h4>
         </div>
       )}
     </div>
