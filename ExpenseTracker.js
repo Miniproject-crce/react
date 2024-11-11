@@ -156,7 +156,7 @@ const ExpenseTracker = () => {
 
       {budgetUsedPercentage >= 80 && (
         <div className="alert alert-warning">
-          <strong>Warning:</strong> 80% of the budget has been utilized. You
+          <strong>Warning:</strong>You
           have used {budgetUsedPercentage.toFixed(2)}% of your budget.
         </div>
       )}
